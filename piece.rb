@@ -21,5 +21,18 @@ class Piece
   end
 
   def maybe_promote
+
+  end
+end
+
+class NullObject
+  def initialize(position, color)
+    @king = false
+    @color = :yellow
+    @current_position = position
+  end
+
+  def is_king?
+    @king
   end
 end
