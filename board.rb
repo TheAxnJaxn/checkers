@@ -3,9 +3,12 @@ require 'colorize'
 
 class Board
 
+  attr_reader :cursor_pos
+
   def initialize(board_size = 8)
     @grid = Array.new(board_size) {Array.new(board_size)}
     populate(board_size)
+    @cursor_pos = [0,0]
   end
 
   def make_move(piece_pos, end_pos)
@@ -42,14 +45,16 @@ class Board
   end
 
   def render
-    # system("clear")
+    system("clear")
     puts
 
     @grid.each_with_index do |row_array, row_idx|
       row_array.each_with_index do |object, col_idx|
 
         # if (row_idx.even? && col_idx.even?) || (row_idx.odd? && col_idx.odd?)
-        if (row_idx + col_idx).even?
+        if [row_idx, col_idx] == @cursor_pos
+          background_color = :green
+        elsif  (row_idx + col_idx).even?
           background_color = :red
         else
           background_color = :black
@@ -61,4 +66,8 @@ class Board
     end
   end
 
+  def move_cursor(increment)
+    r,c = increment
+    @cursor_pos = [(@cursor_pos[0] + r), (@cursor_pos[1] + c)]
+  end
 end
