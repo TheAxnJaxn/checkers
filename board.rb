@@ -8,6 +8,16 @@ class Board
     populate(board_size)
   end
 
+  def make_move(piece_pos, end_pos)
+    r, c = piece_pos
+    selected_piece = @grid[r][c]
+    selected_piece
+  end
+
+  def game_over?
+    false
+  end
+
   def populate(board_size)
     # populates the board of an appropriate size with pieces
     @grid.each_with_index do |row, row_idx|
@@ -50,5 +60,5 @@ class Board
       puts
     end
   end
-  
+
 end
