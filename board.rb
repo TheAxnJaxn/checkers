@@ -10,12 +10,12 @@ class Board
 
   def populate(board_size)
     # populates the board of an appropriate size with pieces
-    (0...board_size).each do |row_idx|
-      row_idx < 2 ? color = :white : color = :red
-      (0...board_size).each do |col_idx|
+    @grid.each_with_index do |row, row_idx|
+      row_idx < 3 ? color = :white : color = :blue
+      row.each_with_index do |square, col_idx|
 
       if row_idx < 3 || row_idx > board_size - 4
-      # if statement to check that it's the first or last 3 rows
+      # if statement to check that it's the first or last 3 rows of any board size
         if (row_idx.even? && col_idx.even?) || (row_idx.odd? && col_idx.odd?)
           #fills with alternating pieces and null objects
           @grid[row_idx][col_idx] = Piece.new([row_idx, col_idx], color)
@@ -33,12 +33,13 @@ class Board
 
   def render
     # system("clear")
-    puts  # extra space at top of terminal
+    puts
 
     @grid.each_with_index do |row_array, row_idx|
       row_array.each_with_index do |object, col_idx|
 
-        if (row_idx.even? && col_idx.even?) || (row_idx.odd? && col_idx.odd?)
+        # if (row_idx.even? && col_idx.even?) || (row_idx.odd? && col_idx.odd?)
+        if (row_idx + col_idx).even?
           background_color = :red
         else
           background_color = :black
@@ -48,6 +49,6 @@ class Board
       end
       puts
     end
-
   end
+  
 end
