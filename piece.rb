@@ -13,19 +13,26 @@ class Piece
     @king
   end
 
-  def perform_slide(end_pos)
-    # perform a single move
-    # illegal slide should return false; else true
+  def make_move?(end_pos)
+    # can the piece move to that end_pos?
+    true
+  end
+
+  def make_move!(end_pos)
+    # move piece to that end_pos
     if can_slide?(end_pos)
-      update_board(@current_position, end_pos)
-      @current_position = end_pos
-      maybe_promote
+      perform_slide!(end_pos)
+    elsif can_jump?(end_pos)
+      perform_jump!(end_pos)
     else
-      puts "Sorry, that piece cannot slide there"
+      puts "Sorry, that piece cannot move there"
     end
   end
 
-  def update_board(current_pos, end_pos)
+  def perform_slide(end_pos)
+    # update board
+    @current_position = end_pos
+    maybe_promote
   end
 
   def can_slide?(end_pos)
@@ -37,17 +44,10 @@ class Piece
   end
 
   def perform_jump
-    # perform a single move, if it is allowed to
-    # otherwise, it'll raise an error
-
-    # remove jumped piece from the Board
     if can_jump?(end_pos)
-      update_board(@current_position, end_pos)
+      # update board
       @current_position = end_pos
       maybe_promote
-    else
-      puts "Sorry, that piece cannot jump there"
-    end
   end
 
   def move_diffs
@@ -55,26 +55,17 @@ class Piece
     possible_directions = []
     r, c = @current_position
 
-    # if it's white(starts at top of board), and not a king,
-    # then it could only slide or jump down. a slide or
-    # jump coordinate should only be included based on enemy piece nearby.
-
-    # if it's white, and a king, then it can slide/jump up or down.
-    # a slide or jump coordinate should only be included based on enemy piece nearby.
-    if @color == :white && @king == false
-      
-      check_for_enemy = [r + 1, c - 1]
-    elsif @color == :white && @king == true
-    elsif @color == :blue && @king == false
-    elsif @color == :blue && @king == true
+    if @king == true
+      possible_directions << [r + 1, c - 1] << [r + 1,  c + 1] << [r + 2, c - 2] << [r + 2, c + 2] << [r - 1, c - c + 1] << [r - 1, c + 1] << [r - 2, c - 2] << [r - 2, c + 2]
+    elsif @color == :white
+      possible_directions << [r + 1, c - 1] << [r + 1,  c + 1] << [r + 2, c - 2] << [r + 2, c + 2]
+    elsif @color == :blue
+      possible_directions << [r - 1, c - c + 1] << [r - 1, c + 1] << [r - 2, c - 2] << [r - 2, c + 2]
     end
+
+    # let board narrow these down if they're off the board?
+    possible_directions
   end
-
-  SLIDE_DOWN_DELTAS = [[1,-1], [1, 1]]
-  JUMP_DOWN_DELTAS = [[2,-2], [2,2]]
-
-  SLIDE_UP_DELTAS = [[-1, -1], [-1, 1]]
-  JUMP_UP_DELTAS = [[-2,-2], [-2, 2]]
 
   def maybe_promote
   # Note to self: Change the white pieces's check of row_idx,

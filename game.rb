@@ -13,6 +13,8 @@ class Game
       render_board
       piece_pos = select_piece
       end_pos = select_end_pos
+      print "Piece_pos: #{piece_pos}"
+      print "End_pos: #{end_pos}"
       @board.make_move(piece_pos, end_pos)
       rotate_player
     end

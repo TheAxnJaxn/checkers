@@ -1,3 +1,4 @@
+require 'byebug'
 require_relative 'piece.rb'
 require 'colorize'
 
@@ -12,9 +13,18 @@ class Board
   end
 
   def make_move(piece_pos, end_pos)
-    r, c = piece_pos
-    selected_piece = @grid[r][c]
-    selected_piece
+    piece_row, piece_col = piece_pos # parse array
+    end_row, end_col = end_pos # parse array
+    selected_piece = @grid[piece_row][piece_col] #object at that location
+
+    if selected_piece.make_move?(end_pos)
+      selected_piece.make_move!(end_pos)
+      # updates the board
+      @grid[end_row][end_col] = selected_piece
+      @grid[piece_row][piece_col] = NullObject.new([piece_row, piece_col], :yellow)
+    else
+      puts "Sorry, but that piece cannot make that move"
+    end
   end
 
   def game_over?
