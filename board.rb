@@ -1,4 +1,5 @@
 require_relative 'piece.rb'
+require 'colorize'
 
 class Board
 
@@ -31,6 +32,22 @@ class Board
   end
 
   def render
+    # system("clear")
+    puts  # extra space at top of terminal
+
+    @grid.each_with_index do |row_array, row_idx|
+      row_array.each_with_index do |object, col_idx|
+
+        if (row_idx.even? && col_idx.even?) || (row_idx.odd? && col_idx.odd?)
+          background_color = :red
+        else
+          background_color = :black
+        end
+
+        print " #{object.visual} ".colorize(:color => object.color, :background => background_color)
+      end
+      puts
+    end
 
   end
 end

@@ -1,9 +1,12 @@
 class Piece
 
+  attr_reader :color, :king, :visual
+
   def initialize(position, color)
     @king = false
     @color = color
     @current_position = position
+    @visual = "0"
   end
 
   def is_king?
@@ -26,10 +29,14 @@ class Piece
 end
 
 class NullObject
+
+  attr_reader :color, :king, :visual
+  
   def initialize(position, color)
     @king = false
     @color = :yellow
     @current_position = position
+    @visual = " "
   end
 
   def is_king?
