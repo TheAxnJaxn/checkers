@@ -17,14 +17,58 @@ class Board
     end_row, end_col = end_pos # parse array
     selected_piece = @grid[piece_row][piece_col] #object at that location
 
-    if selected_piece.make_move?(end_pos)
-      selected_piece.make_move!(end_pos)
-      # updates the board
-      @grid[end_row][end_col] = selected_piece
-      @grid[piece_row][piece_col] = NullObject.new([piece_row, piece_col], :yellow)
+    if selected_piece.move_diffs.include?(end_pos) && is_jump?(piece_pos, end_pos)
+      kill_piece(piece_pos, end_pos)
+      update_board(piece_pos, end_pos)
+      selected_piece.perform_move(end_pos)
+    elsif selected_piece.move_diffs.include?(end_pos)
+      update_board(piece_pos, end_pos)
+      selected_piece.perform_move(end_pos)
     else
       puts "Sorry, but that piece cannot make that move"
+      return false
     end
+    true
+  end
+
+  def is_jump?(start_pos, end_pos)
+    start_row, start_col = start_pos # parse array
+    end_row, end_col = end_pos # parse array
+    return true if (start_row - end_row).abs == 2
+  end
+
+  def is_enemy?(piece_pos, check_pos)
+    piece_row, piece_col = piece_pos # parse array
+    check_row, check_col = check_pos # parse array
+    selected_piece = @grid[piece_row][piece_col] #object at that location
+    checking_piece = @grid[check_row][check_col]
+    selected_piece.color != checking_piece.color ? true : false
+  end
+
+  def kill_piece(piece_pos, end_pos)
+    piece_row, piece_col = piece_pos # parse array
+    end_row, end_col = end_pos # parse array
+
+    if piece_row - end_row == -2
+      killed_row_idx = piece_row + 1
+    elsif piece_row - end_row == 2
+      killed_row_idx = piece_row - 1
+    end
+    if piece_col - end_col == -2
+      killed_col_idx = piece_col + 1
+    elsif piece_col - end_col == 2
+      killed_col_idx = piece_col - 1
+    end
+
+    @grid[killed_row_idx][killed_col_idx] = NullObject.new([piece_row, piece_col], :yellow)
+  end
+
+  def update_board(piece_pos, end_pos)
+    piece_row, piece_col = piece_pos # parse array
+    end_row, end_col = end_pos # parse array
+
+    @grid[end_row][end_col] = @grid[piece_row][piece_col]
+    @grid[piece_row][piece_col] = NullObject.new([piece_row, piece_col], :yellow)
   end
 
   def game_over?
